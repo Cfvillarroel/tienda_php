@@ -1,66 +1,60 @@
 <?php
-  class Cart extends Product{
-      public $cart=array();
-      public function __construct(){
-          parent::__construct();
-          if(isset($_SESSION['cart'])){
-              $this->cart = $_SESSION['cart'];
-          }
-      }
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
 
-      public function add_item($code, $amount){
-          $search = $this->search_code($code);
-          if($search > 0){
-              $code = $this->code;
-              $product = $this->product;
-              $price = $this->price;
-              $item = array(
-                  'code' => $code,
-                  'product' => $product,
-                  'price' => $price,
-                  'amount' => $amount
-              );
-              if(!empty($this->cart)){
-                  foreach($this->cart as $key){
-                      if($key['code']==$code){
-                          $item['amount'] = $key['amount'] + $item['amount'];
-                      }
-                  }
-              }
-              $item['subtotal'] = $item['price']*$item['amount'];
-              $id = md5($code);
-              $_SESSION['cart'][$id] = $item;
-              $this->update_cart();
-          }
-      }
+    if(isset($_POST['enviar'])){ 
+        foreach($_POST['unidades'] as $key => $val) { 
+            if($val==0) { 
+                unset($_SESSION['carrito'][$key]); 
+            }else{ 
+                $_SESSION['carrito'][$key]['unidades']=$val; 
+            } 
+        }     
+    } 
+?> 
+  
+<h1>Carrito de comidas</h1> 
 
-      public function remove_ite($code){
-          $id = md5($code);
-          unset($_SESSION)['cart'][$id]);
-          $this->update_cart();
-          return true;
-      }
-
-      public function get_items(){
-          $html = '';
-          if(!empty($this->cart)){
-              foreach($this->cart as $key){
-                  $code = "'" $key['code'] "'";
-                  $html .= '<tr>
-                                <td> '.$key['code'].' </td>
-                                <td> '.$key['product'].' </td>
-                                <td align="right">'.number_format($key['price'],2).'</td>
-                                <td align="right">'.$key['amount'].'</td>
-                                <td align="right">'.number_format($key['subtotal'],2).'</td>
-                                <td>
-                                    <button onClick="deleteProduct('.$code.');">
-                                        Quitar Articulo
-                                    </button>
-                                </td>
-                            </tr>';
-              }
-          }
-          return $html;
-      }
-  }
-?>
+<form method="post" action="index.php?pagina=carrito"> 
+      
+    <table>
+        <tr> 
+            <th>Producto</th> 
+            <th>Cantidad</th> 
+            <th>Precio</th> 
+            <th>Subtotal</th> 
+        </tr> 
+          
+        <?php 
+          require("includes/connection.php");
+            $sql="SELECT * FROM articulo WHERE id IN (";           
+                foreach($_SESSION['carrito'] as $id => $value) { 
+                    $sql.=$id.","; 
+                } 
+                $sql=substr($sql, 0, -1).") ORDER BY nombre ASC"; 
+                $query=mysqli_query($conexion, $sql); 
+                $total=0; 
+                while($fila=mysqli_fetch_array($query)){ 
+                    $subtotal=$_SESSION['carrito'][$fila['id']]['unidades']*$fila['precio']; 
+                    $total+=$subtotal; 
+                ?> 
+                    <tr> 
+                        <td><?php echo $fila['nombre'] ?></td> 
+                        <td><input type="text" class="numero" name="unidades[<?php echo $fila['id'] ?>]" size="8" value="<?php echo $_SESSION['carrito'][$fila['codigoComida']]['cantidad'] ?>" /></td> 
+                        <td class="numero"><?php echo $fila['precio'] ?> €</td> 
+                        <td class="numero"><?php echo number_format($_SESSION['carrito'][$fila['id']]
+                        ['unidades']*$fila['precio'], 2, '.', '') ?> €</td> 
+                    </tr> 
+                <?php } ?> 
+                <tr> 
+                    <td colspan="4">Total: <?php echo number_format($total, 2, '.', '') ?> €</td> 
+                </tr> 
+    </table> 
+    <br /> 
+    <button type="submit" name="enviar">Actualizar carrito</button> 
+</form> 
+<br /> 
+<p>Para quitar una comida, pon 0 en cantidad</p>
+<a href="index.php?pagina=productos">Ir a los productos</a>

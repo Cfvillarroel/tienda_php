@@ -1,5 +1,5 @@
 function addProduct(code){
-    var amount = document.getElementById(code).nodeValue;
+    var amount = document.getElementById(code).Value;
     window.location.href = 'index.php?action=add&code='+code+'&amount='+amount;
 }
 function deleteProduct(code){

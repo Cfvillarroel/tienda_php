@@ -1,15 +1,17 @@
-<?php
-    include_once('includes/config.php');
-    class Model{
-        protected $db;
-        public function __construct(){
-            $this->db = new mysql(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-            if($this->db->connect_error){
-                echo 'Error de conexión'.$this->db->connect_error;
-                return;
-            }
-            $this->db->set_charset(DB_CHARSET);
-        }
-    }
+<?php 
+  
+  $server="localhost"; 
+  $user="root"; 
+  $pass="root"; 
+  $db="carrito"; 
+    
+  // connect to mysql 
+    
+  $conexion = mysqli_connect($server, $user, $pass) or die("Lo siento, no se puede conectar al servidor."); 
+  $acentos = $conexion->query("SET NAMES 'UTF8'");
+    
+  // select the db 
+    
+  mysqli_select_db($conexion, $db) or die("Lo siento, no se puede conectar  a la base de datos."); 
 
 ?>
