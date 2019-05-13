@@ -15,8 +15,7 @@
     } 
 ?> 
   
-<h1>Carrito de comidas</h1> 
-
+<h1>Carrito de Productos</h1> 
 <form method="post" action="index.php?pagina=carrito"> 
       
     <table>

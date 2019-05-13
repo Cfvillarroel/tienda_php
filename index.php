@@ -2,7 +2,7 @@
     session_start(); 
     require("includes/connection.php"); 
     if(isset($_GET['pagina'])){      
-        $paginas=array("productos", "carrito");      
+        $paginas=array("productos", "carrito", "form_articulo");      
         if(in_array($_GET['pagina'], $paginas)) {         
             $_pagina=$_GET['pagina'];           
         }else{            

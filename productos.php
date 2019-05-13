@@ -17,12 +17,13 @@ if(isset($_GET['accion']) && $_GET['accion']=="anyadir"){
     }
 } 
 ?> 
-<h1>Lista de Comidas</h1>
+<h1>Inventario de Artículos</h1>
 
 <table> 
     <tr> 
-        <th>Comida</th> 
-        <th>Descripción</th> 
+        <th>Producto</th> 
+        <th>Descripción</th>
+        <th>Stock</th> 
         <th>Precio</th> 
         <th>Acción</th> 
     </tr> 
@@ -35,10 +36,13 @@ if(isset($_GET['accion']) && $_GET['accion']=="anyadir"){
         <tr> 
             <td><?php echo $fila['nombre'] ?></td> 
             <td><?php echo $fila['descripcion'] ?></td> 
+            <td><?php echo $fila['unidades'] ?></td>
             <td class="numero"><?php echo $fila['precio'] ?> €</td> 
             <td><a href="index.php?pagina=productos&accion=anyadir&id=<?php echo $fila['id'] ?>">Añadir al carrito</a></td> 
         </tr> 
     <?php } ?> 
 </table>
+<br>
+<a href="index.php?pagina=form_articulo">Añadir Artículo al Inventario</a>
 <br>
 <a href="index.php?pagina=carrito">Ir al carrito</a>
